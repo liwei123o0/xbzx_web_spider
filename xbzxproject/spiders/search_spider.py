@@ -21,7 +21,7 @@ import json
 
 
 class loadSpider(CrawlSpider):
-    name = "news"
+    name = "search"
 
     # 加载规则配置文件
     # 获取额外参数

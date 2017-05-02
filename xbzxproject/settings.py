@@ -114,37 +114,37 @@ ITEM_PIPELINES = {
 
 # BASECONFIG 爬虫基本信息
 
-BASECONFIG = {
-    "mysql": {
-        "databases": "hlwsjcj",
-        "host": "172.16.20.96",
-        "port": 3306,
-        "user": "root",
-        "passwd": "westcredit123"
-    },
-    "scrapy": {
-        "project": "xbzxproject"
-    },
-    "scrapyd": {
-        "host": "172.16.20.92",
-        "port": 6800
-    }
-}
-
-
 # BASECONFIG = {
 #     "mysql": {
-#         "databases": "DataCollect",
-#         "host": "192.168.10.156",
+#         "databases": "hlwsjcj",
+#         "host": "172.16.20.96",
 #         "port": 3306,
 #         "user": "root",
-#         "passwd": "root"
+#         "passwd": "westcredit123"
 #     },
 #     "scrapy": {
 #         "project": "xbzxproject"
 #     },
 #     "scrapyd": {
-#         "host": "192.168.3.236",
+#         "host": "172.16.20.92",
 #         "port": 6800
 #     }
 # }
+
+
+BASECONFIG = {
+    "mysql": {
+        "databases": "DataCollect",
+        "host": "192.168.10.156",
+        "port": 3306,
+        "user": "root",
+        "passwd": "root"
+    },
+    "scrapy": {
+        "project": "xbzxproject"
+    },
+    "scrapyd": {
+        "host": "192.168.3.236",
+        "port": 6800
+    }
+}
