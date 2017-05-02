@@ -20,7 +20,7 @@ import logging
 import json
 
 
-class loadSpider(CrawlSpider):
+class NewSpider(CrawlSpider):
     name = "news"
 
     # 加载规则配置文件
@@ -30,7 +30,7 @@ class loadSpider(CrawlSpider):
         self.name_spider = name_spider
         self.debug = debug
         self.loadconf(name_spider, spider_jobid)
-        super(loadSpider, self).__init__(*args, **kwargs)
+        super(NewSpider, self).__init__(*args, **kwargs)
 
     # 规则配置
     def loadconf(self, name_spider, spider_jobid):
