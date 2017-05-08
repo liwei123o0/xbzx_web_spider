@@ -17,6 +17,7 @@ import logging
 import json
 from xbzxproject.settings import BASECONFIG
 
+
 # 加载规则配置文件
 def fileconfig(name_spider):
     conf = loadscrapyconf()['mysql']
@@ -66,15 +67,22 @@ def loadMySQL(spider_name):
 
 # 加载初始化配置
 def loadscrapyconf():
-
     return BASECONFIG
+
+
+# 获取关键字
+def loadkeywords():
+    return ""
+
 
 if __name__ == "__main__":
     pass
-    # conf = fileconfig('sina')
-    # fields = json.loads(conf.get("fields"))
+    conf = fileconfig('baidusearch')
+    # rules = json.loads(conf.get("rules"))
+    # loops = rules.get("rules").get("rules_listxpath")
+    fields = json.loads(conf.get("fields"))
     # print fields
-    # for k in loadMySQL("sina"):
-    #     print k[2]
-    #     if fields.get("fields").get(k[2]) != None:
-    #         pass
+    for k in loadMySQL("baidusearch"):
+        print k[2]
+        if fields.get("fields").get(k[2]) != None:
+            pass

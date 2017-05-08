@@ -134,7 +134,7 @@ ITEM_PIPELINES = {
 
 BASECONFIG = {
     "mysql": {
-        "databases": "DataCollect",
+        "databases": "DataCollectV1",
         "host": "192.168.10.156",
         "port": 3306,
         "user": "root",
