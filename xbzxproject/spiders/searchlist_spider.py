@@ -11,10 +11,7 @@
 
 """
 from scrapy import Item, Field
-from scrapy.linkextractors import LinkExtractor
-from scrapy.loader import ItemLoader
-from scrapy.loader.processors import MapCompose
-from scrapy.spiders import CrawlSpider, Rule
+from scrapy.spiders import CrawlSpider
 from xbzxproject.utils.loadconfig import loadMySQL, fileconfig, loadkeywords
 import logging
 import json
@@ -23,7 +20,7 @@ from scrapy.http import Request
 
 
 class SearchSpider(CrawlSpider):
-    name = "search"
+    name = "search_list"
 
     # 加载规则配置文件
     # 获取额外参数
@@ -33,6 +30,17 @@ class SearchSpider(CrawlSpider):
         self.debug = debug
         self.loadconf(name_spider, spider_jobid)
         super(SearchSpider, self).__init__(*args, **kwargs)
+
+    # 传递搜索关键词及搜索连接
+    def start_requests(self):
+        conf = fileconfig(self.name_spider)
+        if conf.get("keywords", "") == "":
+            keywords = loadkeywords()
+        else:
+            keywords = conf.get("keywords").split(",")
+        for word in keywords:
+            url = conf.get("start_urls", "").format(word=word)
+            yield Request(url, callback=self.loadconf(self.name_spider, self.spider_jobid), meta={'word': word})
 
     # 规则配置
     def loadconf(self, name_spider, spider_jobid):
@@ -52,40 +60,30 @@ class SearchSpider(CrawlSpider):
         if rules.get("rules", "") == "":
             logging.error(u"规则解析未得到!!!")
             return
-        rules = json.loads(self.conf.get("rules"))
-        if rules.get("rules", "") == "":
-            logging.error(u"规则解析未得到!!!")
-            return
-        self.rules = [
-            Rule(LinkExtractor(
-                restrict_xpaths=u"{}".format(rules.get("rules").get("reles_pagexpath"))),
-                follow=True,
-            ),
-            Rule(LinkExtractor(
-                restrict_xpaths=u"{}".format(rules.get("rules").get("rules_listxpath"))),
-                follow=False,
-                callback="parse_item")
-        ]
 
     # 内容解析
-    def parse_item(self, response):
+    def parse(self, response):
         item = Item()
+        sel = Selector(response)
         fields = json.loads(self.conf.get("fields"))
-        l = ItemLoader(item, response)
+        rules = json.loads(self.conf.get("rules"))
+        loops = rules.get("rules").get("rules_listxpath")
         if fields.get("fields", "") == "":
             logging.error(u"内容解析未得到!!!")
-            return l.load_item()
+            yield item
         item.fields["url"] = Field()
         item.fields["spider_jobid"] = Field()
-        l.add_value("url", response.url)
-        l.add_value("spider_jobid", self.spider_jobid)
+        item["spider_jobid"] = self.spider_jobid
+        item.fields['word'] = Field()
+        item['word'] = response.meta.get("word")
         # 加载动态库字段建立Field,xpath规则 (方法一)
-        for k in loadMySQL(self.conf.get("spider_name")):
-            if fields.get("fields").get(k[2]) != None:
-                item.fields[k[2]] = Field()
-                if fields.get("fields").get(k[2]).keys()[0] == "xpath":
-                    l.add_xpath(k[2], u"{}".format(fields.get("fields").get(k[2]).get("xpath")),
-                                MapCompose(unicode.strip))
-                elif fields.get("fields").get(k[2]).keys()[0] == "value":
-                    l.add_value(k[2], u"{}".format(fields.get("fields").get(k[2]).get("value")))
-        return l.load_item()
+        for loop in sel.xpath("{}".format(loops)):
+            item['url'] = loop.xpath("./h3/a/@href").extract()
+            for k in loadMySQL(self.conf.get("spider_name")):
+                if fields.get("fields").get(k[2]) != None:
+                    item.fields[k[2]] = Field()
+                    if fields.get("fields").get(k[2]).keys()[0] == "xpath":
+                        item[k[2]] = loop.xpath(u"{}".format(fields.get("fields").get(k[2]).get("xpath"))).extract()
+                    elif fields.get("fields").get(k[2]).keys()[0] == "value":
+                        item[k[2]] = u"{}".format(fields.get("fields").get(k[2]).get("value"))
+            yield item
