@@ -34,6 +34,17 @@ class SearchSpider(CrawlSpider):
         self.loadconf(name_spider, spider_jobid)
         super(SearchSpider, self).__init__(*args, **kwargs)
 
+    # 传递搜索关键词及搜索连接
+    def start_requests(self):
+        conf = fileconfig(self.name_spider)
+        if conf.get("keywords", "") == "":
+            keywords = loadkeywords()
+        else:
+            keywords = conf.get("keywords").split(",")
+        for word in keywords:
+            url = conf.get("start_urls", "").format(word=word)
+            yield Request(url, callback=self.loadconf(self.name_spider, self.spider_jobid), meta={'word': word})
+
     # 规则配置
     def loadconf(self, name_spider, spider_jobid):
 
@@ -42,7 +53,7 @@ class SearchSpider(CrawlSpider):
         self.conf = fileconfig(name_spider)
         self.allowed_domains = [self.conf.get("allowed_domains", "")]
 
-        self.start_urls = []
+        # self.start_urls = []
         if self.conf.get("proxy").lower() in "false":
             self.proxy = False
         else:
@@ -50,22 +61,26 @@ class SearchSpider(CrawlSpider):
 
         rules = json.loads(self.conf.get("rules"))
         if rules.get("rules", "") == "":
-            logging.error(u"规则解析未得到!!!")
-            return
-        rules = json.loads(self.conf.get("rules"))
-        if rules.get("rules", "") == "":
-            logging.error(u"规则解析未得到!!!")
-            return
-        self.rules = [
-            Rule(LinkExtractor(
-                restrict_xpaths=u"{}".format(rules.get("rules").get("reles_pagexpath"))),
-                follow=True,
-            ),
-            Rule(LinkExtractor(
-                restrict_xpaths=u"{}".format(rules.get("rules").get("rules_listxpath"))),
-                follow=False,
-                callback="parse_item")
-        ]
+            raise logging.error(u"规则解析未得到!!!")
+        keys = len(rules.get("rules").keys())
+        if keys == 1:
+            self.rules = [
+                Rule(LinkExtractor(
+                    restrict_xpaths=u"{}".format(rules.get("rules").get("rules_listxpath", ""))),
+                    follow=False,
+                    callback="parse_item")
+            ]
+        elif keys == 2:
+            self.rules = [
+                Rule(LinkExtractor(
+                    restrict_xpaths=u"{}".format(rules.get("rules").get("reles_pagexpath"))),
+                    follow=True,
+                ),
+                Rule(LinkExtractor(
+                    restrict_xpaths=u"{}".format(rules.get("rules").get("rules_listxpath"))),
+                    follow=False,
+                    callback="parse_item")
+            ]
 
     # 内容解析
     def parse_item(self, response):
@@ -79,6 +94,8 @@ class SearchSpider(CrawlSpider):
         item.fields["spider_jobid"] = Field()
         l.add_value("url", response.url)
         l.add_value("spider_jobid", self.spider_jobid)
+        item.fields['word'] = Field()
+        l.add_value('word', response.meta.get("word"))
         # 加载动态库字段建立Field,xpath规则 (方法一)
         for k in loadMySQL(self.conf.get("spider_name")):
             if fields.get("fields").get(k[2]) != None:

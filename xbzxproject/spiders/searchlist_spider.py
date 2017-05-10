@@ -58,8 +58,7 @@ class SearchSpider(CrawlSpider):
 
         rules = json.loads(self.conf.get("rules"))
         if rules.get("rules", "") == "":
-            logging.error(u"规则解析未得到!!!")
-            return
+            raise logging.error(u"规则解析未得到!!!")
 
     # 内容解析
     def parse(self, response):
