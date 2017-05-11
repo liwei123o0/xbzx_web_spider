@@ -72,17 +72,26 @@ def loadscrapyconf():
 
 # 获取关键字
 def loadkeywords():
-    return ""
+    conf = loadscrapyconf()['mysql']
+    conn = MySQLdb.connect(host=conf.get("host", "localhost"), port=conf.get("port", 3306),
+                           user=conf.get("user", "root"), passwd=conf.get("passwd", "root"),
+                           db=conf.get("databases"), charset="utf8")
+    cur = conn.cursor()
+    cur.execute("SELECT keyword_whodo,keyword_event,keyword_dowhat FROM  net_spider_keyword;")
+    keywords = cur.fetchall()
+    return keywords
 
 
 if __name__ == "__main__":
     pass
-    conf = fileconfig('baidusearch')
+    # conf = fileconfig('baidusearch')
     # rules = json.loads(conf.get("rules"))
     # loops = rules.get("rules").get("rules_listxpath")
-    fields = json.loads(conf.get("fields"))
+    # fields = json.loads(conf.get("fields"))
     # print fields
-    for k in loadMySQL("baidusearch"):
-        print k[2]
-        if fields.get("fields").get(k[2]) != None:
-            pass
+    # for k in loadMySQL("baidusearch"):
+    #     print k[2]
+    #     if fields.get("fields").get(k[2]) != None:
+    #         pass
+    # for key in loadkeywords():
+    #     print key

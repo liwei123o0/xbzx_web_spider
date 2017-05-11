@@ -39,6 +39,8 @@ class SearchSpider(CrawlSpider):
         else:
             keywords = conf.get("keywords").split(",")
         for word in keywords:
+            if type(word) == tuple:
+                word = " ".join(word)
             url = conf.get("start_urls", "").format(word=word)
             yield Request(url, callback=self.loadconf(self.name_spider, self.spider_jobid), meta={'word': word})
 

@@ -68,7 +68,8 @@ class SearchSpider(CrawlSpider):
                 Rule(LinkExtractor(
                     restrict_xpaths=u"{}".format(rules.get("rules").get("rules_listxpath", ""))),
                     follow=False,
-                    callback="parse_item")
+                    callback="parse_item",
+                )
             ]
         elif keys == 2:
             self.rules = [
@@ -79,7 +80,8 @@ class SearchSpider(CrawlSpider):
                 Rule(LinkExtractor(
                     restrict_xpaths=u"{}".format(rules.get("rules").get("rules_listxpath"))),
                     follow=False,
-                    callback="parse_item")
+                    callback="parse_item",
+                )
             ]
 
     # 内容解析
