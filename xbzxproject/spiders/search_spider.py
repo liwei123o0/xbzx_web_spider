@@ -31,8 +31,8 @@ class SearchSpider(Spider):
         self.spider_jobid = spider_jobid
         self.name_spider = name_spider
         self.debug = debug
-        self.loadconf(name_spider, spider_jobid)
         self.conf = fileconfig(name_spider)
+        self.loadconf(name_spider, spider_jobid)
         super(SearchSpider, self).__init__(*args, **kwargs)
 
     # 传递搜索关键词及搜索连接
@@ -52,7 +52,7 @@ class SearchSpider(Spider):
 
         if name_spider == None or spider_jobid == None:
             raise logging.error(u"name_spider或spider_jobid 不能为空!!!")
-        self.conf = fileconfig(name_spider)
+        # self.conf = fileconfig(name_spider)
         self.allowed_domains = [self.conf.get("allowed_domains", "")]
 
         if self.conf.get("proxy").lower() in "false":
