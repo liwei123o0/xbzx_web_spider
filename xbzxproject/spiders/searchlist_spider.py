@@ -29,19 +29,19 @@ class SearchSpider(CrawlSpider):
         self.name_spider = name_spider
         self.debug = debug
         self.loadconf(name_spider, spider_jobid)
+        self.conf = fileconfig(name_spider)
         super(SearchSpider, self).__init__(*args, **kwargs)
 
     # 传递搜索关键词及搜索连接
     def start_requests(self):
-        conf = fileconfig(self.name_spider)
-        if conf.get("keywords", "") == "":
+        if self.conf.get("keywords", "") == "":
             keywords = loadkeywords()
         else:
-            keywords = conf.get("keywords").split(",")
+            keywords = self.conf.get("keywords").split(",")
         for word in keywords:
             if type(word) == tuple:
                 word = " ".join(word)
-            url = conf.get("start_urls", "").format(word=word)
+            url = self.conf.get("start_urls", "").format(word=word)
             yield Request(url, callback=self.loadconf(self.name_spider, self.spider_jobid), meta={'word': word})
 
     # 规则配置

@@ -14,7 +14,7 @@ from scrapy import Item, Field
 from scrapy.linkextractors import LinkExtractor
 from scrapy.loader import ItemLoader
 from scrapy.loader.processors import MapCompose
-from scrapy.spiders import CrawlSpider, Rule
+from scrapy.spiders import Spider, Rule
 from xbzxproject.utils.loadconfig import loadMySQL, fileconfig, loadkeywords
 import logging
 import json
@@ -22,7 +22,7 @@ from scrapy.selector import Selector
 from scrapy.http import Request
 
 
-class SearchSpider(CrawlSpider):
+class SearchSpider(Spider):
     name = "search"
 
     # 加载规则配置文件
@@ -32,17 +32,19 @@ class SearchSpider(CrawlSpider):
         self.name_spider = name_spider
         self.debug = debug
         self.loadconf(name_spider, spider_jobid)
+        self.conf = fileconfig(name_spider)
         super(SearchSpider, self).__init__(*args, **kwargs)
 
     # 传递搜索关键词及搜索连接
     def start_requests(self):
-        conf = fileconfig(self.name_spider)
-        if conf.get("keywords", "") == "":
+        if self.conf.get("keywords", "") == "":
             keywords = loadkeywords()
         else:
-            keywords = conf.get("keywords").split(",")
+            keywords = self.conf.get("keywords").split(",")
         for word in keywords:
-            url = conf.get("start_urls", "").format(word=word)
+            if type(word) == tuple:
+                word = " ".join(word)
+            url = self.conf.get("start_urls", "").format(word=word)
             yield Request(url, callback=self.loadconf(self.name_spider, self.spider_jobid), meta={'word': word})
 
     # 规则配置
@@ -53,7 +55,6 @@ class SearchSpider(CrawlSpider):
         self.conf = fileconfig(name_spider)
         self.allowed_domains = [self.conf.get("allowed_domains", "")]
 
-        # self.start_urls = []
         if self.conf.get("proxy").lower() in "false":
             self.proxy = False
         else:
@@ -62,31 +63,19 @@ class SearchSpider(CrawlSpider):
         rules = json.loads(self.conf.get("rules"))
         if rules.get("rules", "") == "":
             raise logging.error(u"规则解析未得到!!!")
-        keys = len(rules.get("rules").keys())
-        if keys == 1:
-            self.rules = [
-                Rule(LinkExtractor(
-                    restrict_xpaths=u"{}".format(rules.get("rules").get("rules_listxpath", ""))),
-                    follow=False,
-                    callback="parse_item",
-                )
-            ]
-        elif keys == 2:
-            self.rules = [
-                Rule(LinkExtractor(
-                    restrict_xpaths=u"{}".format(rules.get("rules").get("reles_pagexpath"))),
-                    follow=True,
-                ),
-                Rule(LinkExtractor(
-                    restrict_xpaths=u"{}".format(rules.get("rules").get("rules_listxpath"))),
-                    follow=False,
-                    callback="parse_item",
-                )
-            ]
+
+    def parse(self, response):
+        word = response.meta['word']
+        sel = Selector(response)
+        rules = json.loads(self.conf.get("rules"))
+        loops = sel.xpath(rules.get("rules").get("rules_listxpath", ""))
+        for loop in loops:
+            yield Request("".join(loop.xpath("./@href").extract()), callback=self.parse_item, meta={"word": word})
 
     # 内容解析
     def parse_item(self, response):
         item = Item()
+        word = response.meta['word']
         fields = json.loads(self.conf.get("fields"))
         l = ItemLoader(item, response)
         if fields.get("fields", "") == "":
@@ -97,7 +86,7 @@ class SearchSpider(CrawlSpider):
         l.add_value("url", response.url)
         l.add_value("spider_jobid", self.spider_jobid)
         item.fields['word'] = Field()
-        l.add_value('word', response.meta.get("word"))
+        l.add_value('word', word)
         # 加载动态库字段建立Field,xpath规则 (方法一)
         for k in loadMySQL(self.conf.get("spider_name")):
             if fields.get("fields").get(k[2]) != None:
