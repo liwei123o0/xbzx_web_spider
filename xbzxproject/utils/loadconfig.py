@@ -104,5 +104,3 @@ if __name__ == "__main__":
     #     print k[2]
     #     if fields.get("fields").get(k[2]) != None:
     #         pass
-    keywords = loadkeywords()
-    print keywords
