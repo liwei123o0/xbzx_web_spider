@@ -72,13 +72,24 @@ def loadscrapyconf():
 
 # 获取关键字
 def loadkeywords():
+    keywords = []
     conf = loadscrapyconf()['mysql']
     conn = MySQLdb.connect(host=conf.get("host", "localhost"), port=conf.get("port", 3306),
                            user=conf.get("user", "root"), passwd=conf.get("passwd", "root"),
                            db=conf.get("databases"), charset="utf8")
     cur = conn.cursor()
-    cur.execute("SELECT keyword_whodo,keyword_event,keyword_dowhat FROM  net_spider_keyword;")
-    keywords = cur.fetchall()
+    cur.execute("SELECT keyword_whodo FROM  net_spider_keyword;")
+    keyword_whodo = cur.fetchall()
+    cur.execute("SELECT keyword_event FROM  net_spider_keyword;")
+    keyword_event = cur.fetchall()
+    cur.execute("SELECT keyword_dowhat FROM  net_spider_keyword;")
+    keyword_dowhat = cur.fetchall()
+    for whodo in keyword_whodo:
+        for event in keyword_event:
+            for dowhat in keyword_dowhat:
+                word = whodo[0], event[0], dowhat[0]
+                keywords.append(" ".join(word))
+
     return keywords
 
 
@@ -93,5 +104,5 @@ if __name__ == "__main__":
     #     print k[2]
     #     if fields.get("fields").get(k[2]) != None:
     #         pass
-    # for key in loadkeywords():
-    #     print key
+    keywords = loadkeywords()
+    print keywords
