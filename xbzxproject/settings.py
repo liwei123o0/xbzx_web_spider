@@ -64,20 +64,21 @@ SPIDER_MIDDLEWARES = {
 
 # Enable or disable downloader middlewares
 # See http://scrapy.readthedocs.org/en/latest/topics/downloader-middleware.html
-#DOWNLOADER_MIDDLEWARES = {
+# DOWNLOADER_MIDDLEWARES = {
 
-    #'xbzxproject.middlewares.Proxyip.ProxyMiddleware': 543,
-    # 'xbzxproject.middlewares.downloadwebkit.WebDriverDownloader': 542,
-    #'scrapy_splash.SplashCookiesMiddleware': 723,
-    #'scrapyjs.SplashMiddleware': 725,
-    #'scrapy.downloadermiddlewares.httpcompression.HttpCompressionMiddleware': 810,
-#}
+# 'xbzxproject.middlewares.Proxyip.ProxyMiddleware': 543,
+# 'xbzxproject.middlewares.downloadwebkit.WebDriverDownloader': 542,
+# 'scrapy_splash.SplashCookiesMiddleware': 723,
+# 'scrapyjs.SplashMiddleware': 725,
+# 'scrapy.downloadermiddlewares.httpcompression.HttpCompressionMiddleware': 810,
+# }
 
 # DUPEFILTER_CLASS = 'scrapyjs.SplashAwareDupeFilter'
 # SPLASH_URL = 'http://192.168.10.26:8050/'
 
 # Enable or disable extensions
 # See http://scrapy.readthedocs.org/en/latest/topics/extensions.html
+
 EXTENSIONS = {
     'scrapy.extensions.telnet.TelnetConsole': None,
     'xbzxproject.extensions.StatsPoster': 999,
@@ -131,6 +132,7 @@ ITEM_PIPELINES = {
 #     }
 # }
 
+# BASECONFIG 爬虫基本信息
 
 BASECONFIG = {
     "mysql": {

@@ -85,8 +85,14 @@ def loadkeywords():
     cur.execute("SELECT keyword_dowhat FROM  net_spider_keyword;")
     keyword_dowhat = cur.fetchall()
     for whodo in keyword_whodo:
+        if whodo[0] == '':
+            continue
         for event in keyword_event:
+            if event[0] == '':
+                continue
             for dowhat in keyword_dowhat:
+                if dowhat[0] == '':
+                    continue
                 word = whodo[0], event[0], dowhat[0]
                 keywords.append(" ".join(word))
 

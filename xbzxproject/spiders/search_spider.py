@@ -11,10 +11,9 @@
 
 """
 from scrapy import Item, Field
-from scrapy.linkextractors import LinkExtractor
 from scrapy.loader import ItemLoader
 from scrapy.loader.processors import MapCompose
-from scrapy.spiders import Spider, Rule
+from scrapy.spiders import Spider
 from xbzxproject.utils.loadconfig import loadMySQL, fileconfig, loadkeywords
 import logging
 import json
