@@ -15,6 +15,7 @@ import datetime
 import MySQLdb
 from xbzxproject.settings import BASECONFIG
 from xbzxproject.utils.loadconfig import loadscrapyconf
+import ConfigParser
 
 
 class StatsPoster(object):
@@ -48,15 +49,21 @@ class StatsPoster(object):
             self.enabled = True
 
     def close_spider(self, spider, reason):
-        host_spider = BASECONFIG["scrapyd"]
-        project_spider = BASECONFIG["scrapy"]
+        config = ConfigParser.SafeConfigParser()
+        config.read("../settings.conf")
+        # host_spider = BASECONFIG["scrapyd"]
+        # project_spider = BASECONFIG["scrapy"]
+        host_spider = config.get("scrapyd", "host")
+        project_spider = config.get("scrapy", "project")
         self.cur.execute("SELECT id FROM net_spider WHERE spider_name ='{}'".format(spider.name_spider))
         net_spider_id = self.cur.fetchall()[0][0]
         self.stats.set_value('finish_time', datetime.datetime.now(), spider=spider)
         self.stats.set_value('name_spider', spider.name_spider)
         self.stats.set_value('spider_jobid', spider.spider_jobid)
-        self.stats.set_value("project_spider", project_spider.get("project"))
-        self.stats.set_value("host_spider", host_spider.get("host"))
+        # self.stats.set_value("project_spider", project_spider.get("project"))
+        # self.stats.set_value("host_spider", host_spider.get("host"))
+        self.stats.set_value("project_spider", project_spider)
+        self.stats.set_value("host_spider", host_spider)
         self.stats.set_value("net_spider_id", net_spider_id)
 
         dic = self.stats.get_stats()
