@@ -15,7 +15,6 @@ import datetime
 import MySQLdb
 from xbzxproject.settings import BASECONFIG
 from xbzxproject.utils.loadconfig import loadscrapyconf
-import ConfigParser
 
 
 class StatsPoster(object):
@@ -49,27 +48,21 @@ class StatsPoster(object):
             self.enabled = True
 
     def close_spider(self, spider, reason):
-        config = ConfigParser.SafeConfigParser()
-        config.read("../settings.conf")
-        # host_spider = BASECONFIG["scrapyd"]
-        # project_spider = BASECONFIG["scrapy"]
-        host_spider = config.get("scrapyd", "host")
-        project_spider = config.get("scrapy", "project")
+        host_spider = BASECONFIG["scrapyd"]
+        project_spider = BASECONFIG["scrapy"]
         self.cur.execute("SELECT id FROM net_spider WHERE spider_name ='{}'".format(spider.name_spider))
         net_spider_id = self.cur.fetchall()[0][0]
         self.stats.set_value('finish_time', datetime.datetime.now(), spider=spider)
         self.stats.set_value('name_spider', spider.name_spider)
         self.stats.set_value('spider_jobid', spider.spider_jobid)
-        # self.stats.set_value("project_spider", project_spider.get("project"))
-        # self.stats.set_value("host_spider", host_spider.get("host"))
-        self.stats.set_value("project_spider", project_spider)
-        self.stats.set_value("host_spider", host_spider)
+        self.stats.set_value("project_spider", project_spider.get("project"))
+        self.stats.set_value("host_spider", host_spider.get("host"))
         self.stats.set_value("net_spider_id", net_spider_id)
 
         dic = self.stats.get_stats()
         for key in dic.keys():
             self.COLstr = self.COLstr + key.replace(u"/", u"_") + self.ColumnStyle + u','
-            self.ROWstr = (self.ROWstr + u'"%s"' + u',') % (dic[key])
+        self.ROWstr = (self.ROWstr + u'"%s"' + u',') % (dic[key])
         # 判断表是否存在，存在执行try，不存在执行except新建表，再insert
         try:
             self.cur.execute(u"SELECT * FROM  net_spider_logs")
