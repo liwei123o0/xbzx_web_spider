@@ -42,7 +42,8 @@ class SearchSpider(CrawlSpider):
         for word in keywords:
             if type(word) == tuple:
                 word = " ".join(word)
-            url = self.conf.get("start_urls", "").format(word='"'+word+'"')
+            # 百度精确搜索
+            url = self.conf.get("start_urls", "").format(word='"' + word + '"')
             yield Request(url, callback=self.loadconf(self.name_spider, self.spider_jobid), meta={'word': word})
 
     # 规则配置
