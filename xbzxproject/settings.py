@@ -57,10 +57,10 @@ DEFAULT_REQUEST_HEADERS = {
 
 # Enable or disable spider middlewares
 # See http://scrapy.readthedocs.org/en/latest/topics/spider-middleware.html
-SPIDER_MIDDLEWARES = {
+#SPIDER_MIDDLEWARES = {
     #    'xbzxproject.middlewares.MyCustomSpiderMiddleware': 543,
-    'scrapy_splash.SplashDeduplicateArgsMiddleware': 100,
-}
+    #'scrapy_splash.SplashDeduplicateArgsMiddleware': 100,
+#}
 
 # Enable or disable downloader middlewares
 # See http://scrapy.readthedocs.org/en/latest/topics/downloader-middleware.html
@@ -146,7 +146,7 @@ BASECONFIG = {
         "project": "xbzxproject"
     },
     "scrapyd": {
-        "host": "192.168.3.236",
+        "host": "192.168.10.236",
         "port": 6800
     }
 }

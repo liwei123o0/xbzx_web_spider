@@ -21,6 +21,7 @@ from scrapy.selector import Selector
 from scrapy.http import Request
 
 
+# 站内搜索
 class SearchSpider(Spider):
     name = "search"
 

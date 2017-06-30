@@ -19,6 +19,7 @@ from scrapy.selector import Selector
 from scrapy.http import Request
 
 
+# 搜索引擎
 class SearchSpider(CrawlSpider):
     name = "search_list"
 

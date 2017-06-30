@@ -94,7 +94,7 @@ class XbzxprojectPipeline(object):
             data = data.replace(",}", "}")
             try:
                 self.cur.execute(
-                    u"INSERT INTO net_spider_temp(url,name_spider,spider_data) VALUES('%s','%s','%s');" % (item['url'],
+                    u"INSERT INTO net_spider_temp(url,name_spider,spider_data) VALUES('%s','%s','%s');" % (item[u'url'],
                                                                                                            spider.name_spider,
                                                                                                            data))
                 self.conn.commit()
@@ -119,9 +119,10 @@ class XbzxprojectPipeline(object):
                         sql += u'{}=VALUES({}),'.format(f, f)
                     sql = sql[:-1] + u';'
                     self.cur.execute(sql, values)
+                    self.conn.commit()
                     self.cur.execute(
                         u"UPDATE {} SET update_date='{}' WHERE url='{}'".format(TableName, datetime.datetime.now(),
-                                                                                item['url']))
+                                                                                item[u'url']))
                     self.conn.commit()
                     logging.info(u"数据插入/更新成功!")
                 else:

@@ -62,7 +62,7 @@ class StatsPoster(object):
         dic = self.stats.get_stats()
         for key in dic.keys():
             self.COLstr = self.COLstr + key.replace(u"/", u"_") + self.ColumnStyle + u','
-        self.ROWstr = (self.ROWstr + u'"%s"' + u',') % (dic[key])
+            self.ROWstr = (self.ROWstr + u'"%s"' + u',') % (dic[key])
         # 判断表是否存在，存在执行try，不存在执行except新建表，再insert
         try:
             self.cur.execute(u"SELECT * FROM  net_spider_logs")

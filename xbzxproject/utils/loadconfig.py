@@ -78,29 +78,15 @@ def loadkeywords():
                            user=conf.get("user", "root"), passwd=conf.get("passwd", "root"),
                            db=conf.get("databases"), charset="utf8")
     cur = conn.cursor()
-    cur.execute(u"SELECT keyword_whodo FROM  net_spider_keyword;")
-    keyword_whodo = cur.fetchall()
-    cur.execute(u"SELECT keyword_event FROM  net_spider_keyword;")
-    keyword_event = cur.fetchall()
-    cur.execute(u"SELECT keyword_dowhat FROM  net_spider_keyword;")
-    keyword_dowhat = cur.fetchall()
-    for whodo in keyword_whodo:
-        if whodo[0] == '':
-            continue
-        for event in keyword_event:
-            if event[0] == '':
-                continue
-            for dowhat in keyword_dowhat:
-                if dowhat[0] == '':
-                    continue
-                word = whodo[0], event[0], dowhat[0]
-                keywords.append(" ".join(word))
+    cur.execute(u"SELECT keyword FROM  net_spider_keyword;")
+    word = cur.fetchall()
+    for keyword in word:
+        keywords.append("".join(keyword))
     return keywords
 
 
 if __name__ == "__main__":
     pass
-
     # conf = fileconfig('baidusearch')
     # rules = json.loads(conf.get("rules"))
     # loops = rules.get("rules").get("rules_listxpath")
