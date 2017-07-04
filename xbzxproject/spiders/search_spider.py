@@ -19,6 +19,7 @@ import logging
 import json
 from scrapy.selector import Selector
 from scrapy.http import Request
+from urlparse import urljoin
 
 
 # 站内搜索
@@ -70,7 +71,8 @@ class SearchSpider(Spider):
         rules = json.loads(self.conf.get("rules"))
         loops = sel.xpath(rules.get("rules").get("rules_listxpath", ""))
         for loop in loops:
-            yield Request("".join(loop.xpath("./@href").extract()), callback=self.parse_item, meta={"word": word})
+            yield Request(urljoin(response.url, "".join(loop.xpath("./@href").extract())), callback=self.parse_item,
+                          meta={"word": word})
 
     # 内容解析
     def parse_item(self, response):
