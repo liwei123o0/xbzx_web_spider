@@ -112,7 +112,7 @@ class XbzxprojectPipeline(object):
                     TableName = TableName[0][1]
 
                     # 添加net_spider爬虫id
-                    fields.append("spider_id")
+                    fields.append("net_spider_id")
                     values.append(spider_id)
 
                     # 根据 item 字段插入数据
