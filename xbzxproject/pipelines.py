@@ -104,11 +104,17 @@ class XbzxprojectPipeline(object):
             try:
                 # 通过爬虫名称找表明
                 self.cur.execute(
-                    u"SELECT  tablename FROM net_spider WHERE  spider_name='{}'".format(
+                    u"SELECT  id,tablename FROM net_spider WHERE  spider_name='{}'".format(
                         spider.name_spider))
                 TableName = self.cur.fetchall()
                 if TableName:
-                    TableName = TableName[0][0]
+                    spider_id = TableName[0][0]
+                    TableName = TableName[0][1]
+
+                    # 添加net_spider爬虫id
+                    fields.append("spider_id")
+                    values.append(spider_id)
+
                     # 根据 item 字段插入数据
                     sql = u"INSERT INTO {}({}) VALUES({}) ON DUPLICATE KEY UPDATE ".format(TableName,
                                                                                            u",".join(fields), u','.join(
