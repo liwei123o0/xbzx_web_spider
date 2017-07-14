@@ -108,12 +108,12 @@ class XbzxprojectPipeline(object):
                         spider.name_spider))
                 TableName = self.cur.fetchall()
                 if TableName:
-                    spider_id = TableName[0][0]
+                    net_spider_id = TableName[0][0]
                     TableName = TableName[0][1]
 
                     # 添加net_spider爬虫id
                     fields.append("net_spider_id")
-                    values.append(spider_id)
+                    values.append(net_spider_id)
 
                     # 根据 item 字段插入数据
                     sql = u"INSERT INTO {}({}) VALUES({}) ON DUPLICATE KEY UPDATE ".format(TableName,
