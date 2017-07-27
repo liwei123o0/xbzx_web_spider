@@ -13,7 +13,6 @@
 
 import random
 import logging
-import urllib2
 import MySQLdb
 from xbzxproject.utils.loadconfig import loadscrapyconf
 
