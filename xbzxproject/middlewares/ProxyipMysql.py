@@ -24,8 +24,10 @@ class ProxyMiddleware(object):
     def __init__(self):
         self.idx = 0
         self.conf = loadscrapyconf()['mysql']
-        self.conn = MySQLdb.connect(host=self.conf.get("host", "localhost"), port=self.conf.get("port", 3306),
-                                    user=self.conf.get("user", "root"), passwd=self.conf.get("passwd", "root"),
+        self.conn = MySQLdb.connect(host=self.conf.get("host", "localhost"),
+                                    port=self.conf.get("port", 3306),
+                                    user=self.conf.get("user", "root"),
+                                    passwd=self.conf.get("passwd", "root"),
                                     db=self.conf.get("databases"), charset=u"utf8")
         self.cur = self.conn.cursor()
         self.cur.execute("SELECT proxyip FROM net_proxy;")
