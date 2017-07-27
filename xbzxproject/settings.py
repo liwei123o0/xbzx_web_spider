@@ -66,7 +66,7 @@ SPIDER_MIDDLEWARES = {
 # See http://scrapy.readthedocs.org/en/latest/topics/downloader-middleware.html
 DOWNLOADER_MIDDLEWARES = {
 
-    # 'xbzxproject.middlewares.Proxyip.ProxyMiddleware': 543,
+    'xbzxproject.middlewares.ProxyipMysql.ProxyMiddleware': 543,
     # 'scrapy_splash.SplashCookiesMiddleware': 723,
     # 'scrapyjs.SplashMiddleware': 725,
     'scrapy.downloadermiddlewares.httpcompression.HttpCompressionMiddleware': 810,
