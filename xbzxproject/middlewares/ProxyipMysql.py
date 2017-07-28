@@ -30,8 +30,8 @@ class ProxyMiddleware(object):
                                     db=self.conf.get("databases"), charset=u"utf8")
         self.cur = self.conn.cursor()
         self.cur.execute("SELECT proxyip FROM net_proxy;")
-        proxies = self.cur.fetchall()
-        self.proxy = random.choice(proxies[0])
+        self.proxies = self.cur.fetchall()
+        self.proxy = random.choice(self.proxies)[0]
         self.cur.close()
         self.conn.close()
 
@@ -40,21 +40,10 @@ class ProxyMiddleware(object):
         self.idx += 1
         try:
             if spider.proxy:
-                if self.idx >= 30:
+                if self.idx >= 50:
                     self.idx = 0
-                    self.conf = loadscrapyconf()['mysql']
-                    self.conn = MySQLdb.connect(host=self.conf.get("host", "localhost"),
-                                                port=self.conf.get("port", 3306),
-                                                user=self.conf.get("user", "root"),
-                                                passwd=self.conf.get("passwd", "root"),
-                                                db=self.conf.get("databases"), charset=u"utf8")
-                    self.cur = self.conn.cursor()
-                    self.cur.execute("SELECT proxyip FROM net_proxy;")
-                    proxies = self.cur.fetchall()
-                    self.proxy = random.choice(proxies[0])
-                    self.cur.close()
-                    self.conn.close()
-                    logging.warning("proxy is 30,random_proxy:{}".format(self.proxy))
+                    self.proxy = random.choice(self.proxies)[0]
+                    logging.warning("proxy is 50,random_proxy:{}".format(self.proxy))
                 request.meta['proxy'] = "http://%s" % self.proxy
         except:
             logging.error(u"代理异常,请检查代理IP!")

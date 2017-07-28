@@ -66,7 +66,7 @@ SPIDER_MIDDLEWARES = {
 # See http://scrapy.readthedocs.org/en/latest/topics/downloader-middleware.html
 DOWNLOADER_MIDDLEWARES = {
 
-    'xbzxproject.middlewares.ProxyipMysql.ProxyMiddleware': 543,
+    'xbzxproject.middlewares.ProxyipMysql.ProxyMiddleware': 400,
     # 'scrapy_splash.SplashCookiesMiddleware': 723,
     # 'scrapyjs.SplashMiddleware': 725,
     'scrapy.downloadermiddlewares.httpcompression.HttpCompressionMiddleware': 810,
@@ -145,7 +145,7 @@ BASECONFIG = {
         "project": "xbzxproject"
     },
     "scrapyd": {
-        "host": "192.168.10.236",
+        "host": "192.168.10.160",
         "port": 6800
     }
 }
