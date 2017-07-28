@@ -104,7 +104,7 @@ class XbzxprojectPipeline(object):
             try:
                 # 通过爬虫名称找表明
                 self.cur.execute(
-                    u"SELECT  id,tablename FROM net_spider WHERE  spider_name='{}'".format(
+                    u"SELECT  id,tablename FROM net_spider WHERE  spider_name='{}';".format(
                         spider.name_spider))
                 TableName = self.cur.fetchall()
                 if TableName:
@@ -116,9 +116,10 @@ class XbzxprojectPipeline(object):
                     values.append(net_spider_id)
 
                     # 根据 item 字段插入数据
-                    sql = u"INSERT INTO {}({}) VALUES({}) ON DUPLICATE KEY UPDATE ".format(TableName,
-                                                                                           u",".join(fields), u','.join(
-                            [u'%s'] * len(fields))),
+                    sql = u"INSERT INTO {}({}) VALUES({}) ON DUPLICATE KEY UPDATE ;".format(TableName,
+                                                                                            u",".join(fields),
+                                                                                            u','.join(
+                                                                                                [u'%s'] * len(fields))),
                     sql = str(sql[0])
                     # 插入数据如果数据重复则更新已有数据
                     for f in fields:
@@ -127,8 +128,8 @@ class XbzxprojectPipeline(object):
                     self.cur.execute(sql, values)
                     self.conn.commit()
                     self.cur.execute(
-                        u"UPDATE {} SET update_date='{}' WHERE url='{}'".format(TableName, datetime.datetime.now(),
-                                                                                item[u'url']))
+                        u"UPDATE {} SET update_date='{}' WHERE url='{}';".format(TableName, datetime.datetime.now(),
+                                                                                 item[u'url']))
                     self.conn.commit()
                     logging.info(u"数据插入/更新成功!")
                 else:
