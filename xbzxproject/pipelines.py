@@ -116,7 +116,7 @@ class XbzxprojectPipeline(object):
                     values.append(net_spider_id)
 
                     # 根据 item 字段插入数据
-                    sql = u"INSERT INTO {}({}) VALUES({}) ON DUPLICATE KEY UPDATE ".format(TableName,
+                    sql = u"INSERT INTO {}({}) VALUES({}) ON DUPLICATE KEY UPDATE  ".format(TableName,
                                                                                             u",".join(fields),
                                                                                             u','.join(
                                                                                                 [u'%s'] * len(fields))),
