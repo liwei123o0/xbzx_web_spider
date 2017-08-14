@@ -31,6 +31,8 @@ class ProxyMiddleware(object):
         self.cur = self.conn.cursor()
         self.cur.execute("SELECT proxyip FROM net_proxy;")
         self.proxies = self.cur.fetchall()
+        if len(self.proxies) == 0:
+            self.proxies = ((["127.0.0.1:8080"], ["127.0.0.1:8088"]))
         self.proxy = random.choice(self.proxies)[0]
         self.cur.close()
         self.conn.close()
@@ -47,3 +49,7 @@ class ProxyMiddleware(object):
                 request.meta['proxy'] = "http://%s" % self.proxy
         except:
             logging.error(u"代理异常,请检查代理IP!")
+
+
+if __name__ == "__main__":
+    pass
