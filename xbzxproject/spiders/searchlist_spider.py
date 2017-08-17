@@ -80,7 +80,7 @@ class SearchSpider(CrawlSpider):
         item['word'] = response.meta.get("word")
         # 加载动态库字段建立Field,xpath规则 (方法一)
         for loop in sel.xpath("{}".format(loops)):
-            item['url'] = loop.xpath("./h3/a/@href").extract()
+            item['url'] = loop.xpath(u"{}".format(fields.get("fields").get("url").get("xpath"))).extract()
             for k in loadMySQL(self.conf.get("spider_name")):
                 if fields.get("fields").get(k[2]) != None:
                     item.fields[k[2]] = Field()
@@ -89,3 +89,4 @@ class SearchSpider(CrawlSpider):
                     elif fields.get("fields").get(k[2]).keys()[0] == "value":
                         item[k[2]] = u"{}".format(fields.get("fields").get(k[2]).get("value"))
             yield item
+
