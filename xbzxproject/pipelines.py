@@ -127,10 +127,11 @@ class XbzxprojectPipeline(object):
                     sql = sql[:-1] + u';'
                     self.cur.execute(sql, values)
                     self.conn.commit()
-                    self.cur.execute(
-                        u"UPDATE {} SET update_date='{}' WHERE url='{}';".format(TableName, datetime.datetime.now(),
-                                                                                 item[u'url']))
-                    self.conn.commit()
+                    # 待优化
+                    # self.cur.execute(
+                    #     u"UPDATE {} SET update_date='{}' WHERE url='{}';".format(TableName, datetime.datetime.now(),
+                    #                                                              item[u'url']))
+                    # self.conn.commit()
                     logging.info(u"数据插入/更新成功!")
                 else:
                     logging.error(u"未对该爬虫创建数据库表!")
