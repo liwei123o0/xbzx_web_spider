@@ -113,10 +113,10 @@ ITEM_PIPELINES = {
 
 
 # BASECONFIG 爬虫基本信息
-
+# 贵州
 # BASECONFIG = {
 #     "mysql": {
-#         "databases": "hlwsjcj1",
+#         "databases": "hlwsjcj",
 #         "host": "172.16.20.96",
 #         "port": 3306,
 #         "user": "root",
@@ -126,17 +126,35 @@ ITEM_PIPELINES = {
 #         "project": "xbzxproject"
 #     },
 #     "scrapyd": {
-#         "host": "172.16.20.92",
+#         "host": "172.16.20.95",
 #         "port": 6800
 #     }
 # }
 
 # BASECONFIG 爬虫基本信息
+# 三亚
+# BASECONFIG = {
+#     "mysql": {
+#         "databases": "DataCollectV3",
+#         "host": "59.195.168.25",
+#         "port": 3306,
+#         "user": "root",
+#         "passwd": "root"
+#     },
+#     "scrapy": {
+#         "project": "xbzxproject"
+#     },
+#     "scrapyd": {
+#         "host": "59.195.168.25",
+#         "port": 6800
+#     }
+# }
 
+# 公司
 BASECONFIG = {
     "mysql": {
         "databases": "DataCollectV1",
-        "host": "192.168.10.156",
+        "host": "172.31.249.28",
         "port": 3306,
         "user": "root",
         "passwd": "root"
@@ -145,7 +163,7 @@ BASECONFIG = {
         "project": "xbzxproject"
     },
     "scrapyd": {
-        "host": "192.168.10.160",
+        "host": "172.31.247.17",
         "port": 6800
     }
 }

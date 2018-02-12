@@ -11,7 +11,6 @@
 
 """
 
-import datetime
 import logging
 import re
 
@@ -49,10 +48,11 @@ class XbzxprojectPipeline(object):
             item[k] = re.sub(r"\xa0", "", item[k])
             item[k] = re.sub(r"\u200b", "", item[k])
             item[k] = re.sub(r"\xa5", "", item[k])
+            item[k] = re.sub(r"\u2022", "", item[k])
         try:
             # 判断字段是否存在
             if 'pubtime' in item:
-                item['pubtime'] = date_parse.parse_date(item['pubtime'])
+                item['pubtime'] = unicode(date_parse.parse_date(item['pubtime']))
         except:
             logging.error(u"时间格式化错误!")
             return item
@@ -116,22 +116,19 @@ class XbzxprojectPipeline(object):
                     values.append(net_spider_id)
 
                     # 根据 item 字段插入数据
-                    sql = u"INSERT INTO {}({}) VALUES({}) ON DUPLICATE KEY UPDATE ".format(TableName,
-                                                                                            u",".join(fields),
-                                                                                            u','.join(
-                                                                                                [u'%s'] * len(fields))),
-                    sql = str(sql[0])
+                    sql = u"INSERT INTO {}({}) VALUES ( ".format(TableName, u",".join(fields))
+                    for value in values:
+                        sql += u"'{}',".format(value)
+                    sql += u" ) ON DUPLICATE KEY UPDATE "
+                    sql = sql.replace(u", ) ON DUPLICATE KEY UPDATE", u" ) ON DUPLICATE KEY UPDATE")
+                    # sql = str(sql[0])
                     # 插入数据如果数据重复则更新已有数据
                     for f in fields:
                         sql += u'{}=VALUES({}),'.format(f, f)
                     sql = sql[:-1] + u';'
-                    self.cur.execute(sql, values)
+                    self.cur.execute(sql)
                     self.conn.commit()
-                    # 待优化
-                    # self.cur.execute(
-                    #     u"UPDATE {} SET update_date='{}' WHERE url='{}';".format(TableName, datetime.datetime.now(),
-                    #                                                              item[u'url']))
-                    # self.conn.commit()
+
                     logging.info(u"数据插入/更新成功!")
                 else:
                     logging.error(u"未对该爬虫创建数据库表!")

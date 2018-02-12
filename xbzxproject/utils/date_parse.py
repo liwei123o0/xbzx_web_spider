@@ -1,16 +1,16 @@
 # -*- coding: utf-8 -*-
-#! /usr/bin/env python
-#!/usr/bin/env python
+# ! /usr/bin/env python
+# !/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-from datetime import datetime, timedelta
-from collections import OrderedDict
 import re
+from collections import OrderedDict
+from datetime import datetime, timedelta
 
 __all__ = ['parse_date', 'tz_offset']
 
-def parse_date(x, fmt='auto', tz='+08:00', err=None):
 
+def parse_date(x, fmt='auto', tz='+08:00', err=None):
     """
     Parse datetime `x` with format `fmt` and timezone `tz`.
     Return datetime in UTC
@@ -27,12 +27,14 @@ def parse_date(x, fmt='auto', tz='+08:00', err=None):
 
         x = unicode(x)
         fmt = unicode(fmt)
-
+        # utc 0时区时间
         utcnow = datetime.utcnow()
+        # 根据时区做时间转换
         offset = tz_offset(tz)
+        # 本地当前时间
         now = utcnow + offset
 
-        if fmt=='auto':
+        if fmt == 'auto':
             date = _parse(x, now)
         elif fmt in ['epoch', 'unix']:
             date = datetime.utcfromtimestamp(int(x))
@@ -48,54 +50,54 @@ def parse_date(x, fmt='auto', tz='+08:00', err=None):
             raise
         return datetime.utcfromtimestamp(0)
 
-#转换对应时差时间格式
-def tz_offset(tz):
 
+# 转换对应时差时间格式
+def tz_offset(tz):
     tz = tz.lower().strip()
-    if tz=='cst':
+    if tz == 'cst':
         offset = timedelta(hours=8)
-    elif tz=='utc':
+    elif tz == 'utc':
         offset = timedelta()
     else:
-        res = re.search(r'(?P<F>[-+])(?P<HH>\d{2}):?(?P<MM>\d{2})',tz).groupdict()
+        res = re.search(r'(?P<F>[-+])(?P<HH>\d{2}):?(?P<MM>\d{2})', tz).groupdict()
         offset = timedelta(
-                     hours   = int(res['HH']),
-                     minutes = int(res['MM'])
-                 ) * (1 if res.get('F', '+')=='+' else -1)
+            hours=int(res['HH']),
+            minutes=int(res['MM'])
+        ) * (1 if res.get('F', '+') == '+' else -1)
     return offset
 
-def _parse(x, now=None):
 
+def _parse(x, now=None):
     # 当前时间
     # now = now or datetime.utcnow()
-    #秒
+    # 秒
     now_SS = date_scale(now, 'SS')
-    #分
+    # 分
     now_MM = date_scale(now, 'MM')
-    #小时
+    # 小时
     now_HH = date_scale(now, 'HH')
-    #天
+    # 天
     now_dd = date_scale(now, 'dd')
-    #月
+    # 月
     now_mm = date_scale(now, 'mm')
-    #年
+    # 年
     now_YY = date_scale(now, 'YY')
     # 预处理
     x = re.sub(u'刚刚|刚才', now_MM.strftime('%Y-%m-%d %H:%M:%S'), x)
     # x = re.sub(u'刚刚|刚才', now_MM.strftime('%F %T'), x)
     x = re.sub(u'几', u'0', x)
     x = re.sub(ur'(?<=[\d半前昨今明后])(天|号)', u'日', x)
-    #获取一天时间
+    # 获取一天时间
     one_dd = date_unit('dd')
     rdays = {
-        u'前日': now_dd-one_dd*2,
-        u'昨日': now_dd-one_dd*1,
+        u'前日': now_dd - one_dd * 2,
+        u'昨日': now_dd - one_dd * 1,
         u'今日': now_dd,
-        u'明日': now_dd+one_dd*1,
-        u'后日': now_dd+one_dd*2,
+        u'明日': now_dd + one_dd * 1,
+        u'后日': now_dd + one_dd * 2,
     }
-    #将x值转换成rdays对应时间格式
-    for k,v in rdays.iteritems():
+    # 将x值转换成rdays对应时间格式
+    for k, v in rdays.iteritems():
         x = x.replace(k, v.strftime(' %Y-%m-%d '))
         # x = x.replace(k, v.strftime(' %F '))
 
@@ -104,7 +106,7 @@ def _parse(x, now=None):
     x = re.sub(ur'(?<=\d)\s+(?!\d)', u'', x)
     x = re.sub(ur'(?<!\d)\s+(?=\d)', u'', x)
     x = re.sub(ur'(?<!\d)\s+(?!\d)', u'', x)
-    x = re.sub(ur'(?<!年)(?=(^(1[0-2]|\d+))月(\d+)日)', u' %d年'%now.year, x)
+    x = re.sub(ur'(?<!年)(?=(^(1[0-2]|\d+))月(\d+)日)', u' %d年' % now.year, x)
     x = re.sub(ur'(\d+)年(\d+)月(\d+)日', ur'\g<1>-\g<2>-\g<3> ', x)
     x = x.strip()
 
@@ -120,18 +122,16 @@ def _parse(x, now=None):
             if m:
                 parts.update(m.groupdict())
 
-        for k,v in parts.items():
-            if v==None:
+        for k, v in parts.items():
+            if v == None:
                 del parts[k]
             else:
                 parts[k] = int(v)
 
         if parts:
-
             parts['year'] = parts.get('year', now.year)
             parts['month'] = parts.get('month', now.month)
             parts['day'] = parts.get('day', now.day)
-
             return datetime(**parts)
 
     if u'半' in x:
@@ -145,27 +145,28 @@ def _parse(x, now=None):
             u'半年': u'6月',
         }
 
-        for k,v in halves.iteritems():
+        for k, v in halves.iteritems():
             x = re.sub(k, v, x)
+            print x
 
     us = {
-        u'年':'YY',
-        u'月':'mm',
-        u'周':'ww',
-        u'日':'dd',
-        u'时':'HH',
-        u'分':'MM',
-        u'秒':'SS',
+        u'年': 'YY',
+        u'月': 'mm',
+        u'周': 'ww',
+        u'日': 'dd',
+        u'时': 'HH',
+        u'分': 'MM',
+        u'秒': 'SS',
     }
-    m = re.search(ur'(?P<num>\d+)(?P<unit>%s)(?P<flag>前|后)'%(u'|'.join(us.keys())), x)
+    m = re.search(ur'(?P<num>\d+)(?P<unit>%s)(?P<flag>前|后)' % (u'|'.join(us.keys())), x)
     if m:
         d = m.groupdict()
         k = d['unit']
-        f = -1 if d['flag']==u'前' else 1
-        v = f*int(d['num'])
+        f = -1 if d['flag'] == u'前' else 1
+        v = f * int(d['num'])
         u = date_unit(us[k])
-        s = 'dd' if us[k]=='ww' else us[k]
-        date = date_scale(now + u*v, s)
+        s = 'dd' if us[k] == 'ww' else us[k]
+        date = date_scale(now + u * v, s)
         return date
     for i in re.findall(ur'(?<!\d)(\d{8}|\d{10}|\d{13})(?!\d)', x):
         k = len(i)
@@ -174,8 +175,9 @@ def _parse(x, now=None):
             date = datetime.strptime(i, '%Y%m%d')
         elif k == 10:
             date = datetime.fromtimestamp(v)
+            print date
         elif k == 13:
-            date = datetime.fromtimestamp(v/1000)
+            date = datetime.fromtimestamp(v / 1000)
         else:
             raise Exception()
 
@@ -183,40 +185,41 @@ def _parse(x, now=None):
 
     raise Exception()
 
-def date_scale(dt, scale='MM'):
 
+def date_scale(dt, scale='MM'):
     scales = OrderedDict([
-        ('MS','microsecond'),#微秒
-        ('SS','second'),#秒
-        ('MM','minute'),#分钟
-        ('HH','hour'),#小时
-        ('dd','day'),#天
-        ('mm','month'),#月
-        ('YY','year'),#年
+        ('MS', 'microsecond'),  # 微秒
+        ('SS', 'second'),  # 秒
+        ('MM', 'minute'),  # 分钟
+        ('HH', 'hour'),  # 小时
+        ('dd', 'day'),  # 天
+        ('mm', 'month'),  # 月
+        ('YY', 'year'),  # 年
     ])
 
     assert scale in scales
 
-    for k,v in scales.iteritems():
-        if k==scale:
+    for k, v in scales.iteritems():
+        if k == scale:
             return dt
-        dt = dt.replace(**{v:1 if k in ['dd', 'mm'] else 0})
+        dt = dt.replace(**{v: 1 if k in ['dd', 'mm'] else 0})
 
     raise Exception()
 
+
 _units = dict(
-    SS = timedelta(seconds=1),
-    MM = timedelta(minutes=1),
-    HH = timedelta(hours=1),
-    dd = timedelta(days=1),
-    ww = timedelta(days=7),
-    mm = timedelta(days=30),
-    YY = timedelta(days=365)
+    SS=timedelta(seconds=1),
+    MM=timedelta(minutes=1),
+    HH=timedelta(hours=1),
+    dd=timedelta(days=1),
+    ww=timedelta(days=7),
+    mm=timedelta(days=30),
+    YY=timedelta(days=365)
 )
 
 def date_unit(unit):
-
     return _units[unit]
+
 
 if __name__ == '__main__':
 
@@ -271,12 +274,11 @@ if __name__ == '__main__':
         u'2014 年 1 月 1 日',
     ]
     # print datetime.utcfromtimestamp(0)
-    for i, x in enumerate(xs,1):
-        print 'IN [%d]: %s' % (i, x)
-        y = parse_date(x, 'auto', 'cst', True)
-        print 'OUT[%d]: %s [%s]' % (i, y, type(y).__name__)
-        print
+    # for i, x in enumerate(xs, 1):
+    #     print 'IN [%d]: %s' % (i, x)
+    #     y = parse_date(x, 'auto', 'cst', True)
+    #     print 'OUT[%d]: %s [%s]' % (i, y, type(y).__name__)
+    #     print
     #
-    print '>>>', parse_date('01012014080000', '%m%d%Y%H%M%S', '+08:00')
-    print '>>>', parse_date('1400657331', 'epoch', '+08:00')
-
+    # print '>>>', parse_date('01012014080000', '%m%d%Y%H%M%S', '+08:00')
+    print parse_date(u'4月19号的预售，今天都5月21号了')

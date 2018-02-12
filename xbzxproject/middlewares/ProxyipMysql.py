@@ -11,13 +11,13 @@
 
 """
 
-import random
 import logging
+import random
+
 import MySQLdb
+
 from xbzxproject.utils.loadconfig import loadscrapyconf
 
-
-# Start your middlewares class
 
 class ProxyMiddleware(object):
     def __init__(self):
@@ -37,7 +37,6 @@ class ProxyMiddleware(object):
         self.cur.close()
         self.conn.close()
 
-    # overwrite process request
     def process_request(self, request, spider):
         self.idx += 1
         try:
