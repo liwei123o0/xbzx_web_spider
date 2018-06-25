@@ -150,11 +150,29 @@ ITEM_PIPELINES = {
 #     }
 # }
 
+# 青海
+# BASECONFIG = {
+#     "mysql": {
+#         "databases": "DataCollectV1",
+#         "host": "172.31.249.28",
+#         "port": 3306,
+#         "user": "root",
+#         "passwd": "root"
+#     },
+#     "scrapy": {
+#         "project": "xbzxproject"
+#     },
+#     "scrapyd": {
+#         "host": "172.31.247.17",
+#         "port": 6800
+#     }
+# }
+
 # 公司
 BASECONFIG = {
     "mysql": {
         "databases": "DataCollectV1",
-        "host": "172.31.249.28",
+        "host": "192.168.10.173",
         "port": 3306,
         "user": "root",
         "passwd": "root"
@@ -163,7 +181,7 @@ BASECONFIG = {
         "project": "xbzxproject"
     },
     "scrapyd": {
-        "host": "172.31.247.17",
+        "host": "192.168.10.30",
         "port": 6800
     }
 }

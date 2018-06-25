@@ -125,7 +125,10 @@ class XbzxprojectPipeline(object):
                     # 插入数据如果数据重复则更新已有数据
                     for f in fields:
                         sql += u'{}=VALUES({}),'.format(f, f)
-                    sql = sql[:-1] + u';'
+                    sql = sql[:-1] + u',is_sync_index=0;'
+
+
+
                     self.cur.execute(sql)
                     self.conn.commit()
 
