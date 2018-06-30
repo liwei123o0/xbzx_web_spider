@@ -10,14 +10,16 @@
 @note:新闻通用模版采集~必须字段: spider_jobid name_spider
 
 """
+import json
+import logging
+
 from scrapy import Item, Field
 from scrapy.linkextractors import LinkExtractor
 from scrapy.loader import ItemLoader
 from scrapy.loader.processors import MapCompose
 from scrapy.spiders import CrawlSpider, Rule
+
 from xbzxproject.utils.loadconfig import loadMySQL, fileconfig
-import logging
-import json
 
 
 class NewSpider(CrawlSpider):
@@ -46,7 +48,7 @@ class NewSpider(CrawlSpider):
 
         # self.tablename = spider_jobid
 
-        self.start_urls = self.conf.get("start_urls", "").replace("\r\n", "").split(',')
+        self.start_urls = self.conf.get("start_urls", "").replace("\r", "").replace("\n", "").split(',')
         # 判断是否翻页规则解析 (方法一)
         rules = json.loads(self.conf.get("rules"))
         if rules.get("rules", "") == "":
