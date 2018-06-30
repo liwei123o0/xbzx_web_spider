@@ -51,5 +51,4 @@ class ProxyMiddleware(object):
 
 
 if __name__ == "__main__":
-    a = ProxyMiddleware()
-    print a.proxy
+    pass
