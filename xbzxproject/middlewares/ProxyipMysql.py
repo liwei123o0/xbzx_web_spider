@@ -29,7 +29,7 @@ class ProxyMiddleware(object):
                                     passwd=self.conf.get("passwd", "root"),
                                     db=self.conf.get("databases"), charset=u"utf8")
         self.cur = self.conn.cursor()
-        self.cur.execute("SELECT proxyip FROM net_proxy;")
+        self.cur.execute("SELECT proxyip FROM net_proxy ORDER BY insert_time DESC LIMIT 100;")
         self.proxies = self.cur.fetchall()
         if len(self.proxies) == 0:
             self.proxies = ((["127.0.0.1:8080"], ["127.0.0.1:8088"]))
@@ -51,4 +51,5 @@ class ProxyMiddleware(object):
 
 
 if __name__ == "__main__":
-    pass
+    a = ProxyMiddleware()
+    print a.proxy
