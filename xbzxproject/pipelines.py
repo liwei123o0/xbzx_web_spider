@@ -36,10 +36,7 @@ class XbzxprojectPipeline(object):
             self.cur.execute("TRUNCATE net_spider_temp")
             self.conn.commit()
         logging.info(u"mysql连接成功!")
-        if spider.proxy:
-            logging.info(u"代理已启动...")
-        else:
-            logging.info(u"无代理状态抓取!")
+        logging.info(u"代理状态:%s" % spider.proxy)
 
     def process_item(self, item, spider):
 

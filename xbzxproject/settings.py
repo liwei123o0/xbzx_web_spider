@@ -126,7 +126,7 @@ ITEM_PIPELINES = {
 #         "project": "xbzxproject"
 #     },
 #     "scrapyd": {
-#         "host": "172.16.20.95",
+#         "host": "172.16.20.96",
 #         "port": 6800
 #     }
 # }
@@ -168,6 +168,24 @@ ITEM_PIPELINES = {
 #     }
 # }
 
+# 山西
+# BASECONFIG = {
+#     "mysql": {
+#         "databases": "DataCollectV1",
+#         "host": "59.195.168.25",
+#         "port": 3306,
+#         "user": "root",
+#         "passwd": "root"
+#     },
+#     "scrapy": {
+#         "project": "xbzxproject"
+#     },
+#     "scrapyd": {
+#         "host": "59.195.168.25",
+#         "port": 6800
+#     }
+# }
+
 # 公司
 BASECONFIG = {
     "mysql": {
@@ -181,7 +199,7 @@ BASECONFIG = {
         "project": "xbzxproject"
     },
     "scrapyd": {
-        "host": "192.168.10.30",
+        "host": "192.168.10.173",
         "port": 6800
     }
 }
