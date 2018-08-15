@@ -13,12 +13,15 @@
 
 import logging
 import re
+import sys
 
 import MySQLdb
 
 from xbzxproject.utils import date_parse
 from xbzxproject.utils.loadconfig import loadscrapyconf
 
+reload(sys)
+sys.setdefaultencoding("utf8")
 
 # mysql入库Pipeline
 class XbzxprojectPipeline(object):
@@ -115,7 +118,7 @@ class XbzxprojectPipeline(object):
                     # 根据 item 字段插入数据
                     sql = u"INSERT INTO {}({}) VALUES ( ".format(TableName, u",".join(fields))
                     for value in values:
-                        sql += u"'{}',".format(value)
+                        sql += u"'{}',".format(MySQLdb.escape_string(value))
                     sql += u" ) ON DUPLICATE KEY UPDATE "
                     sql = sql.replace(u", ) ON DUPLICATE KEY UPDATE", u" ) ON DUPLICATE KEY UPDATE")
                     # sql = str(sql[0])
