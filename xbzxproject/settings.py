@@ -9,6 +9,31 @@
 #     http://doc.scrapy.org/en/latest/topics/settings.html
 #     http://scrapy.readthedocs.org/en/latest/topics/downloader-middleware.html
 #     http://scrapy.readthedocs.org/en/latest/topics/spider-middleware.html
+import ConfigParser
+
+PATH = "D:\\xbzx_webspider\\settings.ini"
+
+conf = ConfigParser.ConfigParser()
+conf.read(PATH)
+
+# mysql
+HOST = conf.get("mysql", "host")
+PORT = int(conf.get("mysql", "port"))
+USER = conf.get("mysql", "user")
+PASSWD = conf.get("mysql", "passwd")
+DATABASES = conf.get("mysql", "databases")
+
+# proxy
+PROXY_COUT = conf.get("proxy", "proxy_cout")
+RANDOM_NUMBER = conf.get("proxy", "random_number")
+
+# scrapy
+PROJECT = conf.get("scrapy", "project")
+
+# scrapyd
+HOST_SCRAPYD = conf.get("scrapyd", "host")
+PORT_SCRAPYD = conf.get("scrapyd", "port")
+
 
 BOT_NAME = 'xbzxproject'
 
