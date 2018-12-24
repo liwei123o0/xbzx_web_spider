@@ -3,5 +3,9 @@
   <component name="NewModuleRootManager">
     <content url="file://$MODULE_DIR$" />
     <orderEntry type="sourceFolder" forTests="false" />
+    <orderEntry type="module" module-name="news_project" />
+    <orderEntry type="module" module-name="TensorFlowBar" />
+    <orderEntry type="module" module-name="AndroidApi" />
+    <orderEntry type="module" module-name="HttpRestApi" />
   </component>
 </module>

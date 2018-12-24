@@ -2,6 +2,10 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
+      <module fileurl="file://D:/AndroidApi/.idea/AndroidApi.iml" filepath="D:/AndroidApi/.idea/AndroidApi.iml" />
+      <module fileurl="file://D:/HttpRestApi/.idea/HttpRestApi.iml" filepath="D:/HttpRestApi/.idea/HttpRestApi.iml" />
+      <module fileurl="file://D:/TensorFlowBar/.idea/TensorFlowBar.iml" filepath="D:/TensorFlowBar/.idea/TensorFlowBar.iml" />
+      <module fileurl="file://D:/news_project/.idea/news_project.iml" filepath="D:/news_project/.idea/news_project.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/xbzx_webspider.iml" filepath="$PROJECT_DIR$/.idea/xbzx_webspider.iml" />
     </modules>
   </component>
