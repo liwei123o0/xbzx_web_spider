@@ -211,11 +211,30 @@ ITEM_PIPELINES = {
 #     }
 # }
 
+# 西安
+# BASECONFIG = {
+#     "mysql": {
+#         "databases": "zr_data_acq",
+#         "host": "10.16.33.148",
+#         "port": 3306,
+#         "user": "zr_data_acq",
+#         "passwd": "XbzxCaiji123"
+#     },
+#     "scrapy": {
+#         "project": "xbzxproject"
+#     },
+#     "scrapyd": {
+#         "host": "10.16.33.141",
+#         "port": 6800
+#     }
+# }
+
+
 # 公司
 BASECONFIG = {
     "mysql": {
         "databases": "DataCollectV1",
-        "host": "192.168.10.173",
+        "host": "192.168.10.155",
         "port": 3306,
         "user": "root",
         "passwd": "root"
